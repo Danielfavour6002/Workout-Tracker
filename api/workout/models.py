@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from api.exercise.models import Exercise
 from api.users.models import User
 # Create your models here.
 class WorkoutSchedule(models.Model):
