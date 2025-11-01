@@ -15,7 +15,7 @@ class ListCreateWorkoutAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class RetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+class RetrieveUpdateDeleteWorkoutAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.WorkoutSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -30,6 +30,5 @@ class ListWorkoutExercisesAPIView(generics.ListAPIView):
         return WorkoutExercises.objects.filter(workout__id=self.kwargs["pk"], workout__user=self.request.user)
 
    
-        
 
         

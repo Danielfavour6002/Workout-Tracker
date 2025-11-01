@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.workout.models import WorkoutSchedule, WorkoutExercises
-
+from api.exercise.serializers import ExerciseSerializer
 
 class WorkoutSerializer(serializers.ModelSerializer):
 
@@ -10,8 +10,7 @@ class WorkoutSerializer(serializers.ModelSerializer):
         exclude = ["user"]
         read_only_fields = ["id"]
 
-class ExerciseSerializer(serializers.ModelSerializer):
-    pass
+
 
 class WorkoutExerciseSerializer(serializers.ModelSerializer):
     exercise = ExerciseSerializer(many=True, read_only=True)

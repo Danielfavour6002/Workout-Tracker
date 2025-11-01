@@ -27,26 +27,6 @@ class WorkoutSchedule(models.Model):
     def __str__(self):
         return f"workout {self.title} by {self.user.username}"
 
-class Exercise(models.Model):
-    class ExerciseCategory(models.TextChoices):
-        CARDIO = 'cardio', 'cardio'
-        STRENGTH = 'strength', 'strength'
-        FLEXIBILITY = 'flexibility', 'flexibility'
-    class MuscleGroup(models.TextChoices):
-        CHEST = 'chest', 'chest'    
-        BACK = 'back', 'back'
-        LEGS = 'legs', 'legs'
-        ARMS = 'arms', 'arms'
-        CORE = 'core', 'core'
-        ALL = 'all', 'all'
-    name = models.CharField(max_length=100)
-    category = models.CharField(max_length=20, choices=ExerciseCategory.choices, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    muscle_group = models.CharField(max_length=20, choices=MuscleGroup.choices, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-    
 class WorkoutExercises(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     workout = models.ForeignKey(WorkoutSchedule, on_delete=models.CASCADE, related_name='workout_exercises')
