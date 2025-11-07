@@ -27,11 +27,17 @@ class WorkoutSchedule(models.Model):
 
     def __str__(self):
         return f"workout {self.title} by {self.user.username}"
+    
+    @property
+    def duration(self):
+        if not self.start_date or not self.end_date:
+            return None
+        return (self.end_date -self.start_date).total_seconds()/60
 
 class WorkoutExercises(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     workout = models.ForeignKey(WorkoutSchedule, on_delete=models.CASCADE, related_name='workout_exercises')
-    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name='exercises')
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name='workout_exercises')
     reps = models.PositiveIntegerField(default=1)
     sets = models.PositiveIntegerField(default=1)
     weights = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True)
@@ -39,15 +45,3 @@ class WorkoutExercises(models.Model):
     def __str__(self):
         return f"{self.workout.title} x {self.exercise.name}"
 
-class Report(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    # user_id = 
-    workout_id = models.ForeignKey(WorkoutSchedule, on_delete=models.CASCADE, related_name="report" )
-    report_date = models.DateTimeField(auto_now_add=True)
-    weights_lifted = models.DecimalField(max_digits=5, decimal_places=1)
-    reps_completed = models.PositiveIntegerField(default=0)
-    sets_completed = models.PositiveIntegerField(default=0)
-    notes = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return f"report for {self.workout_id.title} on {self.report_date.date}"

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'api.workout',
     'api.exercise',
     'api.auths',
+    'api.reports',
     'rest_framework',
     'rest_framework_simplejwt',
 

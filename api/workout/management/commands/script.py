@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import lorem_ipsum
-from workout.models import Exercise
+from api.workout.models import Exercise
 
 
 class Command(BaseCommand):

@@ -22,9 +22,9 @@ class RetrieveUpdateDeleteWorkoutAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return WorkoutSchedule.objects.filter(user=self.request.user)
 
-class ListWorkoutExercisesAPIView(generics.ListAPIView):
+class ListCreateWorkoutExercisesAPIView(generics.ListCreateAPIView):
     serializer_class = serializers.WorkoutExerciseSerializer
-    permission_classes = permissions.IsAuthenticated
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return WorkoutExercises.objects.filter(workout__id=self.kwargs["pk"], workout__user=self.request.user)
