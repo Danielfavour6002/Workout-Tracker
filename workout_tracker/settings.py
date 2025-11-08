@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'api.reports',
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular'
 
     
 
@@ -144,7 +145,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 
 }
 
@@ -152,4 +154,11 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'FITNESS TRACKER API',
+    'DESCRIPTION': 'api for a fitness tracker api',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    
 }

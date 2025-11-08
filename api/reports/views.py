@@ -1,3 +1,4 @@
+from jsonschema import ValidationError
 from rest_framework.views import APIView
 from api.reports.serializers import WorkoutSummarySerializer, WorkoutProgressSerializer, WorkoutReportSerializer, WorkoutMeSerializer, ReportExerciseSerializer
 from django.db.models import Sum, Count
@@ -71,56 +72,39 @@ class WorkoutProgressAPIView(APIView):
         }, status=200)
 
 class WorkoutReportAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, pk):
-        # Ensure workout belongs to user
         workout = get_object_or_404(WorkoutSchedule, id=pk, user=request.user)
 
-        # Try to get the latest report session
+        # Get latest session or create a new empty one
         report = Report.objects.filter(workout=workout).order_by("-date").first()
-
-        # If no report exists → generate one
         if not report:
-            exercises = WorkoutExercises.objects.filter(workout=workout)
+            report = Report.objects.create(workout=workout)
 
-            total_sets = exercises.aggregate(total=Sum("sets"))["total"] or 0
-            total_reps = exercises.aggregate(total=Sum("reps"))["total"] or 0
-            total_weights = exercises.aggregate(total=Sum("weights"))["total"] or 0
-
-            report = Report.objects.create(
-                workout=workout,
-                total_sets=total_sets,
-                total_reps=total_reps,
-                total_weights=total_weights,
-                total_duration=workout.duration,
-                notes="Auto-generated session report."
-            )
-
-        # Prepare structured response data
-        summary = {
-            "workout_name": workout.title,
-            "total_exercises": workout.workout_exercises.count(),
-            "total_reps": report.total_reps,
-            "total_sets": report.total_sets,
-            "total_duration": report.total_duration,
-        }
-
-        progress = {
-            "progress": report,
-            "trend": "stable"  # Hard-coded for now (could compute later)
-        }
+        # Aggregate totals from ReportExercise for this session
+        totals = report.report_exercise.aggregate(
+            total_sets=Sum("sets_completed"),
+            total_reps=Sum("reps_completed"),
+            total_weight=Sum("weights_lifted")
+        )
 
         data = {
             "report_id": report.id,
-            "workout": workout.title,
-            "summary": summary,
-            "progress": progress,
-            "insights": "Keep going! You're doing great."
+            "workout_title": workout.title,
+            "date": report.date,
+            "total_sets": totals.get("total_sets") or 0,
+            "total_reps": totals.get("total_reps") or 0,
+            "total_weight": totals.get("total_weight") or 0,
+            "total_duration": workout.duration,
+            "exercise_count": report.report_exercise.count(),
         }
 
-        serializer = WorkoutReportSerializer(data)
-        return Response(serializer.data)
+        return Response(data, status=200)
 
-        
+
+
+
 class UserWorkoutProgress(APIView):
     def get(self, request):
         serializer = WorkoutMeSerializer({
@@ -129,9 +113,22 @@ class UserWorkoutProgress(APIView):
         })
         return Response(serializer.data)
 
-class ReportExerciseView(generics.ListCreateAPIView):
+class ReportExerciseListCreateAPIView(generics.ListCreateAPIView):
     
     serializer_class = ReportExerciseSerializer
     def get_queryset(self):
-        return ReportExercise.objects.filter(report__workout__user=self.request.user)
+        return ReportExercise.objects.filter(report__id=self.kwargs["pk"],report__workout__user=self.request.user)
     
+    def perform_create(self, serializer):
+        report = get_object_or_404(
+            Report,
+            id=self.kwargs["report_id"],
+            workout__user=self.request.user
+        )
+
+        # Prevent logging exercises not in workout template
+        valid_exercises = WorkoutExercises.objects.filter(workout=report.workout).values_list("exercise_id", flat=True)
+        if serializer.validated_data["exercise"].id not in valid_exercises:
+            raise ValidationError("This exercise is not part of the workout plan.")
+
+        serializer.save(report=report)

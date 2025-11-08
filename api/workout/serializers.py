@@ -8,14 +8,14 @@ class WorkoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkoutSchedule
         exclude = ["user"]
-        read_only_fields = ["id",]
+        read_only_fields = ("id", )
        
 class WorkoutExerciseSerializer(serializers.ModelSerializer):
     exercise = ExerciseSerializer(read_only=True)
     class Meta:
         model = WorkoutExercises
         fields = ["id", "workout", "exercise", "reps", "sets", "weights"]
-        read_only_fields = ("id",)
+        read_only_fields = ["id"]
         
     def perform_create(self, serializer):
         workout = get_object_or_404(

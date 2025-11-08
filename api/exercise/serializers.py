@@ -5,5 +5,5 @@ class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
         fields = "__all__"
-        read_only_fields = "id"
+        read_only_fields = ["id"]
         

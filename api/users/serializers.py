@@ -50,4 +50,21 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ("first_name", "last_name","username", "email", "bio", "weight", "height", "age")
 
+    def update(self, instance, validated_data):
+        """
+        instance = Profile instance
+        instance.user = User instance
+        """
+        user = instance.user
+
+        # Update user fields
+        user.username = validated_data.pop("username", user.username)
+        user.first_name = validated_data.pop("first_name", user.first_name)
+        user.last_name = validated_data.pop("last_name", user.last_name)
+        user.email = validated_data.pop("email", user.email)
+        user.save()
+
+        # Update profile fields
+        return super().update(instance, validated_data)
+
 
