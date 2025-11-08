@@ -2,7 +2,7 @@
 
 A Django REST API for tracking workouts, exercises, sessions, and performance analytics. Users can register, log workouts, log exercises, view progress reports, and track their fitness journey. Admins can manage exercises and view user progress.
 
-Project URL: https://workout-tracker-xd79.onrender.com/docs
+URL: https://workout-tracker-xd79.onrender.com/docs
 ---
 
 ## Features
@@ -133,7 +133,8 @@ DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 5. Create a Pull Request.
 
 ---
-
+source
+https://roadmap.sh/projects/fitness-workout-tracker
 ## License
 
 MIT License © 2025 Favour Daniel
