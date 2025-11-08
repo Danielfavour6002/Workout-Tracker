@@ -136,4 +136,4 @@ DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 
 ## License
 
-MIT License © 2025 Your Name
+MIT License © 2025 Favour Daniel
