@@ -171,3 +171,4 @@ CORS_ALLOWED_ORIGINS = [
     "https://fit-llog.vercel.app",
     "http://localhost:3000",
 ]
+CORS_ALLOW_CREDENTIALS = True
