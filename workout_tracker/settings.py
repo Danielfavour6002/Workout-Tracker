@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'api.reports',
     'rest_framework',
     'rest_framework_simplejwt',
-    'drf_spectacular'
+    'drf_spectacular',
+    'corsheaders',
 
     
 
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -165,3 +167,7 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     
 }
+CORS_ALLOWED_ORIGINS = [
+    "https://fit-llog.vercel.app",
+    "http://localhost:3000",
+]
