@@ -169,7 +169,7 @@ SPECTACULAR_SETTINGS = {
 }
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",           
-    "https://fit-log.vercel.app",     
+    "https://fit-llog.vercel.app",     
     "https://*.v0.app",                 
 ]
 CORS_ALLOW_CREDENTIALS = True
